@@ -1,9 +1,8 @@
 a = int #number of character in alphabet#
-q = int #number of state
+q = int #number of states
 I = int #initial state position
 T = int
 Q = []
-
 
 f = open("automate_1", "r")
 a = f.readline()
