@@ -1,5 +1,4 @@
 import pprint
-
 a = int #number of character in alphabet#
 q = int #number of states
 I = int #initial state position
@@ -55,10 +54,10 @@ def showtab(f):
 def menu():
     m = int(input(" Pick an automaton to use : \n-----1-----\n-----2-----\n-----3-----\n-----4-----\n"))
     if m ==1:
-        f = open("automate_1")
+        f = open("automate_1",'r')
     if m ==2:
-        f = open("automate_2")
-    return f
+        f = open("automate_2",'w')
+    return f,m
 
 
 def show_info(f):
@@ -131,12 +130,129 @@ def print_tab(f,tab,deterministic):
             else:
                 print(" ", i, " |    ", tab[i][0][0], "    |    ", tab[i][1][0], "    |")
     print(set_term," end")
+    return tab
+
+def standardisation(f,tab,standard,m):
+    f.seek(0)
+    a = int(f.readline())
+    p = int(f.readline())
+    init = f.readline()
+    term = f.readline()
+    nb_init = int(init[0])
+    nb_term = int(term[0])
+    set_init = []
+    set_term = []
+    set_init.append("I")
+    kar = " "
+    counterx = 0
+    countery = 0
+    nb_transi = int(f.readline())
+    new_Init_states = [[kar for i in range(3)] for j in range(nb_transi)]
+    new_inputx = []
+
+    new_inputy = []
+
+    for k in range(2, 2 * nb_init + 1, 2):
+        set_init.append(init[k])
+
+    for k in range(2, 2 * nb_term + 1, 2):
+        set_term.append(term[k])
+
+    print("new transition : \n")
+    for i in range(0,nb_transi):
+
+        transi = f.readline()
+        if transi[0] in set_init:
+            print("I",transi[1],transi[2])
+            new_Init_states[i][0] = "I"
+            new_Init_states[i][1] = transi[1]
+            new_Init_states[i][2] = transi[2]
+            stringer = str(new_Init_states[i][0]+new_Init_states[i][1]+new_Init_states[i][2])
+            print(stringer)
+            if transi[1] =='a':
+                new_inputx.insert(0,int(transi[2]))
+                countery += 1
+            if transi[1] == 'b':
+                new_inputy.insert(0,int(transi[2]))
+
+
+    last_inset=[new_inputx,new_inputy]
+    tab.insert(0, last_inset)
+    pprint.pprint(tab)
+    return tab
+
+
+
+    #récupérer les transitions des état initiaux.
+
+        # create transition from I to the transition of past Initial states
+def print_tab_from_tab(f,tab,standardised):
+    f.seek(0)
+    a = f.readline()
+    q = f.readline()
+    q = int(q)
+    print(a,"\n")
+    a = int(a)
+    init = f.readline()
+    term = f.readline()
+    nb_init = int(init[0])
+    nb_term = int(term[0])
+    set_init = []
+    set_term = []
+    counter = 0
+    x = 0
+    for k in range(2, 2 * nb_init + 1, 2):
+        set_init.append(init[k])
+
+    for k in range(2, 2 * nb_term + 1, 2):
+        set_term.append(term[k])
+    print("      ",end="")
+    for i in range(97,97+a):
+
+        print("_____",chr(i),"_____|",end="")
+    print(" ")
+    for i in range(0,q+1):
+        if i<nb_term:
+            vf = int(set_term[i])
+        if i<nb_init:
+            vb = int(set_init[i])
+        if vf ==i and vb!=i:
+            print("<- ", end="")
+
+        if vb == i and vf:
+            print("-> ",end="")
+        if vb!=i and vf!=i:
+            print("   ",end="")
+        if vb == i == vf:
+            print("<->",end="")
+        if standardised:
+            if i==0:
+                print("I",end="   |")
+            else:
+                print(i-1,end="   |")
+        for k in range(0,a):
+            for r in range(0,a):
+                if tab[i][k][r]== " ":
+                    print("X",end="  |")
+                else:
+                    print(tab[i][k][r],end="    |")
+        print(" ")
+
+
+
+
+
+
 
 
 def main():
     f = menu()
-    show_info(f)
-    x =showtab(f)
-    print_tab(f,x[0],x[1])
+
+    show_info(f[0])
+    x =showtab(f[0])
+    tab =print_tab(f[0],x[0],x[1])
+    standardisation(f[0],tab,x[2],f[1])
+    stanardized = True
+    print_tab_from_tab(f[0],tab,stanardized)
     return 0
 main()
