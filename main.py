@@ -47,17 +47,23 @@ def showtab(f):
         deterministic = False
         print("There are more than on initial state so the automata is not standard and not deterministic")
 
-    pprint.pprint(tab)
-    print(deterministic,standard)
+
+    if standard:
+        print("\nthis automaton is standard")
+    if deterministic:
+        print("\nthis Automata is deterministic")
+    else:
+        print("\nthis automaton is not deterministic")
     return tab,deterministic,standard
 
 
 def menu():
-    m = int(input(" Pick an automaton to use : \n-----1-----\n-----2-----\n-----3-----\n-----4-----\n"))
-    if m ==1:
-        f = open("automate_1",'r')
-    if m ==2:
-        f = open("automate_2",'w')
+    m = int(input(" Pick an automaton to use, from 1 to 44\n"))
+
+    file = "int3-6-"
+    file_open = file+str(m)+".txt"
+    print(file_open,"\n\n")
+    f = open(file_open,'r')
     return f,m
 
 
@@ -250,16 +256,19 @@ def print_tab_from_tab(f,tab,standardised):
 
 
 
+
 def main():
     f = menu()
 
     show_info(f[0])
     x =showtab(f[0])
     tab =print_tab(f[0],x[0],x[1])
-    standardisation(f[0],tab,x[2],f[1])
-    stanardized = True
-    print_tab_from_tab(f[0],tab,stanardized)
-    print(tabulate(tab, headers='firstrow', tablefmt='fancy_grid'))
+    if x[2] == False:
+        standardisation(f[0],tab,x[2],f[1])
+        stanardized = True
+        print_tab_from_tab(f[0],tab,stanardized)
+
+    print(tabulate(tab, headers='a b c', tablefmt='fancy_grid'))
     return 0
 
 main()
