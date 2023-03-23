@@ -1,4 +1,5 @@
 import pprint
+from tabulate import tabulate
 a = int #number of character in alphabet#
 q = int #number of states
 I = int #initial state position
@@ -227,15 +228,19 @@ def print_tab_from_tab(f,tab,standardised):
             print("<->",end="")
         if standardised:
             if i==0:
-                print("I",end="   |")
+                print("I",end="   | ")
             else:
-                print(i-1,end="   |")
+                print(i-1,end="   | ")
         for k in range(0,a):
+            print(end="   ")
             for r in range(0,a):
                 if tab[i][k][r]== " ":
-                    print("X",end="  |")
+                    print("",end="")
                 else:
-                    print(tab[i][k][r],end="    |")
+                    print(tab[i][k][r],end=",")
+                if r ==a-1 :
+                    print(end="    |")
+            print(end="   ")
         print(" ")
 
 
@@ -254,5 +259,7 @@ def main():
     standardisation(f[0],tab,x[2],f[1])
     stanardized = True
     print_tab_from_tab(f[0],tab,stanardized)
+    print(tabulate(tab, headers='firstrow', tablefmt='fancy_grid'))
     return 0
+
 main()
